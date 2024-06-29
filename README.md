@@ -2,8 +2,9 @@
 Like Napture, but in Lua!
 
 <div align="center">
-<img src="https://raw.githubusercontent.com/ZakaHaceCosas/Naptua/main/peakBussinDeveloperExperience.png" width=400 />
-<img src="https://raw.githubusercontent.com/ZakaHaceCosas/Naptua/main/peakWindowsWebXDeveloperExperience.png" width=400 />
+<img src="https://raw.githubusercontent.com/ZakaHaceCosas/Naptua/main/broIsBeingToldWelcomeByNaplua.png" width=500 />
+<img src="https://raw.githubusercontent.com/ZakaHaceCosas/Naptua/main/broUsesLightMode.png" width=500 />
+<img src="https://raw.githubusercontent.com/ZakaHaceCosas/Naptua/main/developerHatesCommonJs.png" width=500 />
 </div>
 
 > [!NOTE]
