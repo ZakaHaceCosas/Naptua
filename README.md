@@ -17,8 +17,10 @@ A WebX browser made for Windows with exclusive developer tools such as built-in 
 | Less broken on Windows than Napture | Uses Windows native GUI without styling |
 | Written in a language that makes it easy to work with | Code is not so good, though |
 | Custom rendering engine | (Not really a custom rendering engine) |
+| ... | Broken (mostly) |
+| ... | (for now) requires self compiling (downloading the framework) |
 
-As said, it is not finished, so don't expect it to work properly. It's a two day project and a messy code. Later I'll take my time to clean it.
+As said, **it is not finished**, so don't expect it to work properly and don't get surpirsed by it having more cons than pros. It's a two day project and a messy code. Later I'll take my time to clean it.
 
 ### FEATURES:
 
