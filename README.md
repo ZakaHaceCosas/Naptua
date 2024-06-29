@@ -7,7 +7,7 @@ Like Napture, but in Lua!
 > [!WARNING]
 > TERRIBLE CODE WARNING
 
-A browser made for Windows with exclusive developer tools such as built-in documentation, Naptua RawInspect, and Naptua Deproin!
+A WebX browser made for Windows with exclusive developer tools such as built-in documentation, Naptua RawInspect, and Naptua Deproin!
 
 ### PROS and CONS of NAPTUA
 
