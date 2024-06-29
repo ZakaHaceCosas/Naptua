@@ -81,11 +81,11 @@ Both implemented ones and WIPs
 
 (writing this kind of things is when you realise how good / bad of a developer you are)
 
-- After opening WebX docs, any interaction with the search bar crashes the program.
+- When rendering with Nafart, any interaction with the search bar crashes the program. When it is the WebX documentation, the topbar / action menu makes it crash aswell.
 - CSS not loaded by Nafart.
 - DNS cache limited to 5 entries (if more, sometimes JSON gets cropped for unknown reasons).
 - Entering a `buss://` URL in the search bar crashes the program.
-- Some websites do not open, return a Lua error and crash the program. For example, [`buss://chat.dev`](https://github.com/TheAspectDev/webx-chat.lol) or [`fuckcommonjs.fr`](https://github.com/efekos/webx-fuckcommonjs).
+- ~~Some websites do not open, return a Lua error and crash the program. For example, [`buss://chat.dev`](https://github.com/TheAspectDev/webx-chat.lol) or [`fuckcommonjs.fr`](https://github.com/efekos/webx-fuckcommonjs).~~ **Fixed!**
 - Clicking GO on an already loaded website (as [`chat.it`](https://github.com/PixelFacts/chatroom) somehow does work) crashes the program.
 
 ### CONTRIBUTING
