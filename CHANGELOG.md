@@ -1,14 +1,19 @@
-> 0.0.2
+### CHANGELOG
 
-- fixed getsourcecode and gotourl crashing the program if a html or a css or a lua wasnt provided.
-- fixed program crashing if title or remote werent accessible.
-- now return to home clears the search bar (when it doesnt crash - nafart/webview are still broken)
-- added a button to go home
-- added a welcome to naplua txt and a subtext
-- added nafart to about
-- now the ui is rendered with `repeat` instead of `while`
-- slight adjustment to the spec draft
+#### 0.0.2
 
-> 0.0.1
+> Fixes:
+- Resolved crashes caused by `GetSourceCode` and `GoToUrl` functions when HTML++, CSS 3.25, or Lua files were absent.
+- Fixed program crashes due to the code not being able to access "title" or "remote" `WEBXITE` parameters.
 
-first release
+> Enhancements:
+- Cleared search bar upon returning home (excluding instances where crashes occur; issues persist with Nafart/webview).
+- Introduced a home button for easier navigation.
+- Added "Welcome to Naplua" text with a slightly descriptive subtext.
+- Incorporated Nafart version into the about section.
+- UI rendering now utilizes Lua `repeat` instead of `while`.
+- Made minor adjustments to the spec draft.
+
+#### 0.0.1
+
+first release lol
