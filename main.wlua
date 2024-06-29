@@ -552,14 +552,15 @@ function PerformNartRendering(h, c, l)
         end
         local nartMarkupCompat = string.match(htmls,
             '<meta webx-equiv=[\'"]YAP-UA-Compatible[\'"] content=[\'"]nart=(.-)[\'"]>')
-        if nartMarkupCompat and nartMarkupCompat == "true" then
-            WEBXITE.nart_markup_compatibility = "YEP"
-        elseif nartMarkupCompat and nartMarkupCompat == "false" then
-            WEBXITE.nart_markup_compatibility = "NAH"
-        elseif nartMarkupCompat and nartMarkupCompat == "kinda" then
-            WEBXITE.nart_markup_compatibility = "KYEP"
+        if nartMarkupCompat and nartMarkupCompat == "yap" then
+            WEBXITE.nart_markup_compatibility = "YAP (Fully compatible)"
+        elseif nartMarkupCompat and nartMarkupCompat == "nah" then
+            WEBXITE.nart_markup_compatibility = "NAH (Compatibility specifications not met)"
+        elseif nartMarkupCompat and nartMarkupCompat == "kyap" then
+            WEBXITE.nart_markup_compatibility = "KYAP (Kinda compatible)"
         elseif not nartMarkupCompat then
-            WEBXITE.nart_markup_compatibility = "NOT"
+            WEBXITE.nart_markup_compatibility =
+            "NOT (Compatibility specifications' accomplishment not specified by developer)"
         end
 
         --[[
