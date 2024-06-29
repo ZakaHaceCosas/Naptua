@@ -90,9 +90,22 @@ local groupbox = ui.Groupbox(win, "Naptua", 20, 10, groupboxWidth, 55)
 local searchBar = ui.Entry(groupbox, "", 10, 20, (groupboxWidth - 120), 20)
 searchBar.tooltip = "Enter a URL"
 searchBar.textalign = "center"
-local goButton = ui.Button(groupbox, "GO", (groupboxWidth - 100), 20, 80, 22)
+local goButton = ui.Button(groupbox, "GO", (groupboxWidth - 100), 20, 40, 22)
+local returnButton = ui.Button(groupbox, "HOME", (groupboxWidth - 50), 20, 40, 22)
 local panel = ui.Panel(win, 10, 70, (windowprops.width - 20), (windowprops.height - 100))
 panel.border = true
+local welcome = ui.Label(panel, "Welcome to Naptua!", ((windowprops.width / 2) - 200), ((windowprops.height / 2) - 150))
+welcome.textalign = "center"
+welcome.fontsize = 30
+welcome.fontstyle = { ["italic"] = true, ["bold"] = false }
+welcome.fgcolor = 0x9BF4FF
+local welcome2 = ui.Label(panel,
+    "Use the top search bar to search! Note that this is an in-dev browser and not all WebX sites get indexed yet",
+    ((windowprops.width / 2) - 450), ((windowprops.height / 2) - 100))
+welcome2.textalign = "center"
+welcome2.fontsize = 15
+welcome2.fontstyle = { ["italic"] = true, ["bold"] = false }
+welcome2.fgcolor = 0x9BF4FF
 
 -- TOPBAR MENU
 win.menu = ui.Menu()
@@ -198,8 +211,8 @@ DNS[webx]
         sixthlabel.textalign = "center"
 
         local seventhlabel = ui.Label(aboutModal,
-            "Naptua v0.0.1 and NART v1",
-            ((aboutModal.width / 2) - 80), 210)
+            "Naptua v0.0.2 and NART v1 and NAFART v1",
+            ((aboutModal.width / 2) - 120), 210)
         seventhlabel.fontsize = 8
         seventhlabel.textalign = "center"
     elseif item.text == "Quit" then
@@ -214,31 +227,31 @@ function GetSourceCode(what)
         return c
     elseif what == "css" then
         local f = sys.File("style.css")
-        local c = f:open("read")
-        if not c then
-            local f2 = sys.File("styles.css")
-            local c2 = f2:open("read")
-            if not c2 then
-                return "Not provided."
-            else
-                return c2:read()
-            end
-        else
+        if f.exists == true then
+            local c = f:open("read")
             return c:read()
+        else
+            local f2 = sys.File("styles.css")
+            if f2.exists == true then
+                local c2 = f2:open("read")
+                return c2:read()
+            else
+                return "Not provided."
+            end
         end
     elseif what == "lua" then
         local f = sys.File("script.lua")
-        local c = f:open("read")
-        if not c then
-            local f2 = sys.File("main.lua")
-            local c2 = f2:open("read")
-            if not c2 then
-                return "Not provided."
-            else
-                return c2:read()
-            end
-        else
+        if f.exists == true then
+            local c = f:open("read")
             return c:read()
+        else
+            local f2 = sys.File("main.lua")
+            if f2.exists == true then
+                local c2 = f2:open("read")
+                return c2:read()
+            else
+                return "Not provided."
+            end
         end
     end
 end
@@ -394,8 +407,19 @@ NAPTUA DEveleoper PROperties INspector (DEPROIN)
 
 ]]
 
-            local deproinlblstepb = "TITLE: " .. WEBXITE.title .. "\n" .. "REMOTE URI: " .. WEBXITE.remote
-            local deproinlbl = deproinlblstepa .. deproinlblstepb
+            local deproinlblstepb
+            if WEBXITE.title then
+                deproinlblstepb = "TITLE: " .. WEBXITE.title
+            else
+                deproinlblstepb = "TITLE: NOT PROVIDED or ERROR WHILE ACCESSING"
+            end
+            local deproinlblstepc
+            if WEBXITE.remote then
+                deproinlblstepc = "REMOTE URI: " .. WEBXITE.remote
+            else
+                deproinlblstepc = "REMOTE URI: NOT PROVIDED or ERROR WHILE ACCESSING"
+            end
+            local deproinlbl = deproinlblstepa .. deproinlblstepb .. "\n" .. deproinlblstepc
 
             local deproin = ui.Edit(inspection, deproinlbl, 10, 40, (inspection.width - 20),
                 (inspection.height - 50))
@@ -561,6 +585,14 @@ function PerformNartRendering(h, c, l)
         WEBXITE.title .. ", hosted on " .. WEBXITE.remote .. ".")
 end
 
+function Return()
+    for _, element in ipairs(panel.childs) do
+        element:hide()
+    end
+
+    searchBar.text = ""
+end
+
 -- GO TO URL FUNCTION
 function GoToUrl(i, ip)
     windowprops.isInHome = false
@@ -616,21 +648,31 @@ function GoToUrl(i, ip)
         end
 
         local HTMLFILE = sys.File("index.html")
-        HTMLFILE:open("read")
-        local htmlpp = HTMLFILE:read()
+        local htmlpp
+        if HTMLFILE.exists then
+            HTMLFILE:open("read")
+            htmlpp = HTMLFILE:read()
+        else
+            ERROR("This page does not have an index!")
+            Return()
+        end
         if cssfilename then
             local CSSFILE = sys.File(cssfilename)
-            CSSFILE:open("read")
-            local cssthreepointtwentyfive = CSSFILE:read()
-            if luafilename then
-                local LUAFILE = sys.File(luafilename)
-                LUAFILE:open("read")
-                local luau = LUAFILE:read()
-                WEBXITE.remote = baseuri .. acoplateduri
-                PerformNartRendering(htmlpp, cssthreepointtwentyfive, luau)
+            if CSSFILE.exists == true then
+                CSSFILE:open("read")
+                local cssthreepointtwentyfive = CSSFILE:read()
+                if luafilename and sys.File(luafilename).exists == true then
+                    local LUAFILE = sys.File(luafilename)
+                    LUAFILE:open("read")
+                    local luau = LUAFILE:read()
+                    WEBXITE.remote = baseuri .. acoplateduri
+                    PerformNartRendering(htmlpp, cssthreepointtwentyfive, luau)
+                else
+                    WEBXITE.remote = baseuri .. acoplateduri
+                    PerformNartRendering(htmlpp, cssthreepointtwentyfive, nil)
+                end
             else
-                WEBXITE.remote = baseuri .. acoplateduri
-                PerformNartRendering(htmlpp, cssthreepointtwentyfive, nil)
+                -- nothing
             end
         else
             WEBXITE.remote = baseuri .. acoplateduri
@@ -714,8 +756,16 @@ function goButton:onClick()
     end
 end
 
+function returnButton:onClick()
+    Return()
+end
+
 ui.run(win):wait()
 
-while win.visible do
+--[[while win.visible do
     ui.update()
-end
+end]]
+
+repeat
+    ui.update()
+until not win.visible
