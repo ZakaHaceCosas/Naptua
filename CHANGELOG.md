@@ -7,6 +7,7 @@
 - added a welcome to naplua txt and a subtext
 - added nafart to about
 - now the ui is rendered with `repeat` instead of `while`
+- slight adjustment to the spec draft
 
 > 0.0.1
 
