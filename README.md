@@ -22,7 +22,7 @@ A WebX browser made for Windows with exclusive developer tools such as built-in 
 | Has many tools for developers | Mostly unfinished |
 | Less broken on Windows than Napture | Uses Windows native GUI without styling |
 | Written in a language that makes it easy to work with | Code is not so good, though |
-| Custom rendering engine | (Not really a custom rendering engine) |
+| Custom rendering engine (Nart) | Not using it, using a WebView based "engine" (Nafart) |
 | ... | Broken (mostly) |
 | ... | (for now) requires self compiling (downloading the framework) |
 
@@ -37,10 +37,15 @@ Both implemented ones and WIPs
 >         - [ ] Styling load
 >         - [ ] Script load
 >     - [ ] Nart (NATIVE) Rendering
->         - [ ] HTML#
+>         - [ ] HTML++
 >             - [ ] WebX User-Agent propietary implementation
->         - [ ] CSS 4
->         - [ ] LuaRT support (of course limited access to avoid `sys.Directory("C:\Windows\system32\"):remove()`)
+>         - [ ] CSS 3.25
+>         - [ ] Lua
+>         - [ ] Go beyond and expand the framework
+>             - [ ] HTML#
+>             - [ ] CSS 4
+>             - [ ] LuaRT support (of course limited access to avoid `sys.Directory("C:\Windows\system32\"):remove()`)
+>             - [ ] _(If you wonder why I put this here if it's going to be sooooooo long before I get to this stage, well, now the names are already taken by this repo and can't be stolen XD)_
 > - [ ] Developer Tools
 >     - [X] Naptua Logs
 >         - [ ] Make Naptua Logs better
@@ -69,6 +74,17 @@ Both implemented ones and WIPs
 >     - [X] Light and dark mode
 >     - [ ] Preferred DNS
 >     - [ ] UI language (I will only add Spanish (my native lang) and English (mastered). Other langs will rely on this repo or just never get added lol.)
+
+> [!TIP]
+> If you are doubting about the naming:
+> - Naptua = Browser name (Napture but in Lua)
+> - Nart = "Real" rendering engine codename (Naptua + RT (because the framework used is LuaRT))
+> - Nafart =  Actual rendering "engine" codename (Nart but **fa**ke -> Nafart)
+> - Naptua RawInspect = Basic inspector (to _inspect_ the _raw_ files)
+> - Naptua Inspect = Inspector
+> - Naptua Deproin = Naptua Developer (DE) Properties (PRO) Inspector (IN)
+> - Naptua Logs = Basically Napture Logs but in Naptua
+> - WXE = _wont tell for now, just put it so the name is taken. just in case._
 
 ### HOW TO RUN
 
