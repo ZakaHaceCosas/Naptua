@@ -2,9 +2,9 @@
 Like Napture, but in Lua!
 
 <div align="center">
-<img src="https://raw.githubusercontent.com/ZakaHaceCosas/Naptua/main/broIsBeingToldWelcomeByNaplua.png" width=500 />
-<img src="https://raw.githubusercontent.com/ZakaHaceCosas/Naptua/main/broUsesLightMode.png" width=500 />
-<img src="https://raw.githubusercontent.com/ZakaHaceCosas/Naptua/main/developerHatesCommonJs.png" width=500 />
+<img src="https://raw.githubusercontent.com/ZakaHaceCosas/Naptua/main/broIsBeingToldWelcomeByNaplua.png" width=450 />
+<img src="https://raw.githubusercontent.com/ZakaHaceCosas/Naptua/main/broUsesLightMode.png" width=450 />
+<img src="https://raw.githubusercontent.com/ZakaHaceCosas/Naptua/main/developerHatesCommonJs.png" width=450 />
 </div>
 
 > [!NOTE]
