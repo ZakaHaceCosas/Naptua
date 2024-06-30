@@ -59,6 +59,94 @@ WEBXITE = {
     remote = nil,                    -- site ip
 }
 
+DEFAULT_STYLES = [[
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Varela+Round&display=swap');
+
+:root {
+    --titlebar: #313130;
+    --tab: #424242;
+    --highlight: #656565;
+    --button: #393838;
+    --background: #252524;
+    --text1: white;
+    --text2: black;
+    --font: "Noto Sans";
+    --link: #50889b;
+    --searchBar: #424242;
+}
+
+*{box-sizing: border-box;}
+.query{height:fit-content !important}
+img{
+    width: fit-content;
+}
+body {
+gap: 10;
+background-color: ${themeConfig["background"]};
+color: ${themeConfig["text1"]};
+direction: column;
+align-items: fill;
+width:100vw;
+height:100vh;
+font-family: ${themeConfig["font"]};
+padding: 12px;
+margin: 0;
+}
+h1 {font-size: 32px;}
+h2 {font-size: 28px;}
+h3 {font-size: 26px;}
+h4 {font-size: 24px;}
+h5 {font-size: 20px;}
+h6 {font-size: 18px;}
+
+a {
+border: none;
+color: ${themeConfig["link"]};
+text-decoration: underline;
+}
+
+input, button, select, option {
+background-color: ${themeConfig["button"]};
+font-family: ${themeConfig["font"]};
+color: ${themeConfig["text1"]};
+padding: 5px;
+border-color: #616161;
+border-width: 1px;
+border-style: solid;
+border-radius: 8px;
+}
+
+button:hover {
+background-color: ${themeConfig["highlight"]};
+transition: 0.2s;
+}
+hr {
+border: none;
+border-bottom: 1px solid ${themeConfig["text1"]};
+width: 100%;
+}
+
+textarea {
+padding: 5px;
+border-color: #616161;
+border-width: 1px;
+border-style: solid;
+border-radius: 12px;
+
+width: 400px;
+height: 100px;
+}
+]]
+
+LOAD_DEFAULT_STYLES = [[
+(function() {
+var style = document.createElement('style');
+style.type = 'text/css';
+style.appendChild(document.createTextNode(']] .. DEFAULT_STYLES .. [['));
+document.head.appendChild(style);
+})();
+]]
+
 -- PROGRAM PROPERTIES
 ABOUTNAPTUA = {
     ["APPVERSION"] = "0.0.3",       -- app version itself
@@ -599,6 +687,9 @@ function PerformNartRendering(h, c, l)
     local htmlpath = sys.File("index.html").fullpath
     local fakenartengine = ui.Webview(panel, "file://" .. htmlpath)
     function fakenartengine:onReady()
+        fakenartengine:addinitscript(
+            [[(function e() {var style = document.createElement('style');style.type = 'text/css';style.appendChild(document.createTextNode(']] ..
+            DEFAULT_STYLES .. [['));document.head.appendChild(style);})(); e()]])
         fakenartengine.contextmenu = false
         fakenartengine.statusbar = false
         fakenartengine.acceleratorkeys = false
