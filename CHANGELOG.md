@@ -1,5 +1,18 @@
 ### CHANGELOG
 
+#### 0.0.3
+
+> Fixes:
+- Fixed the way Naptua checks if cache file and settings file does exist.
+- Home UI not getting re-rendered when clicking the "HOME" button.
+
+> Enhancements:
+- Now the Nafart Inspector (basically WebView2's inspection tool) is accessible.
+
+> Developer enhancements:
+- Renamed a few functions so it's more clear what they do.
+- Added an array in-code for app versions at the top of the file, so there's no need to search for the "About" page's string to update versioning.
+
 #### 0.0.2
 
 > Fixes:
