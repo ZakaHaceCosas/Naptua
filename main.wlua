@@ -59,6 +59,19 @@ WEBXITE = {
     remote = nil,                    -- site ip
 }
 
+-- PROGRAM PROPERTIES
+ABOUTNAPTUA = {
+    ["APPVERSION"] = "0.0.3",       -- app version itself
+    ["NARTVERSION"] = "NID",        -- not in developement
+    ["NAFARTVERSION"] = "1.1",      -- fake engine
+    ["RAWINSPECTVERSION"] = "1.0",  -- yeah, i plan to give it some updates
+    ["INSPECTORVERSION"] = "0.1",   -- 0.1 (unfinished af)
+    ["LOGSVERSION"] = "1.0",        -- 1.0 (stable, works)
+    ["DEPROINVERSION"] = "0.1",     -- 0.1 (so unfinished lol)
+    ["FRAMEWORKVERSION"] = "1.8.0", -- LuaRT version
+    ["ARCH"] = "x64"                -- architecture
+}
+
 -- WINDOW PROPERTIES
 -- and
 -- WINDOW DEFINITION
@@ -216,9 +229,10 @@ DNS[webx]
         sixthlabel.fontsize = 8
         sixthlabel.textalign = "center"
 
-        local seventhlabel = ui.Label(aboutModal,
-            "Naptua v0.0.2 and NART v1 and NAFART v1",
-            ((aboutModal.width / 2) - 120), 210)
+        local sls = "Naptua v" ..
+            ABOUTNAPTUA["APPVERSION"] ..
+            " and NART v" .. ABOUTNAPTUA["NARTVERSION"] .. " and NAFART v" .. ABOUTNAPTUA["NAFARTVERSION"]
+        local seventhlabel = ui.Label(aboutModal, sls, ((aboutModal.width / 2) - 120), 210)
         seventhlabel.fontsize = 8
         seventhlabel.textalign = "center"
     elseif item.text == "Quit" then
@@ -479,13 +493,11 @@ function AccessRemote()
     CACHE:open()
     local data = CACHE:read()
 
-    -- Si hay datos en la caché, devolverlos directamente
     if data and data ~= "" then
         CACHE:close()
         return data
     end
 
-    -- Función para procesar y escribir los datos en la caché
     local function processAndCacheData(response)
         if response.status == 200 then
             local parsed = json.decode(response.content)
@@ -556,6 +568,12 @@ function PerformNartRendering(h, c, l)
             win.title = tit
             WEBXITE.title = tit
         end
+
+        -- this is an idea i had
+        -- since there are different browsers (Napture, Fapture, Bussinga, Naptua...)
+        -- and each one has slight differences on the way they render stuff
+        -- it would be cool to have a webx specification for compatibility
+        -- just like the world wide web does
         local nartMarkupCompat = string.match(htmls,
             '<meta webx-equiv=[\'"]YAP-UA-Compatible[\'"] content=[\'"]nart=(.-)[\'"]>')
         if nartMarkupCompat and nartMarkupCompat == "yap" then
@@ -585,6 +603,12 @@ function PerformNartRendering(h, c, l)
         fakenartengine.statusbar = false
         fakenartengine.acceleratorkeys = false
         fakenartengine.devtools = false
+    end
+
+    function DevOptions.submenu:onClick(item)
+        if item.text == "Open Nafart WebView Inspector" then
+            fakenartengine:opendevtools()
+        end
     end
 
     fakenartengine.align = "all"
