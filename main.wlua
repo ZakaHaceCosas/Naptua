@@ -5,41 +5,41 @@ local crypto = require("crypto")          -- we'll use this later
 local net = require("net")                -- networking
 local json = require("json")              -- javashit object notation
 
+-- SETUP SYSTEM FILES
 -- NAPTUA LOGS
 LOGS = sys.File("logs.naptua")
-function LOG(content)
+if not LOGS.exists == true then
+    LOGS:open("write", "utf8")
+    LOGS:close()
+end
+
+function LogToNaptuaLogs(content)
     LOGS:open("append", "utf8")
     LOGS:writeln(sys.Datetime().date .. " " .. sys.Datetime().time .. " " .. tostring(content))
     LOGS:close()
 end
 
-function ERROR(message)
+function ErrorAndLog(message)
     ui.error(message)
-    LOG("ERROR: " .. message)
+    LogToNaptuaLogs("ERROR: " .. message)
 end
 
 -- NAPTUA DNS CACHE
 CACHE = sys.File("cache.naptua.json")
-if not CACHE:open("read") then
+if not CACHE.exists == true then
     CACHE:open("write", "utf8")
 end
 CACHE:close()
 
 -- NAPTUA SETTINGS
 SETTINGS = sys.File("preferences.naptua")
-local opened = SETTINGS:open("read", "utf8")
 
-if not opened then
-    SETTINGS = sys.File("preferences.naptua")
+if not SETTINGS.exists == true then
     SETTINGS:open("write", "utf8")
     SETTINGS:write([[
 THEME[light]
 DNS[webx]
 ]])
-    SETTINGS:close()
-else
-    SETTINGS:open()
-    local content = SETTINGS:read()
     SETTINGS:close()
 end
 
@@ -62,13 +62,10 @@ WEBXITE = {
 -- WINDOW PROPERTIES
 -- and
 -- WINDOW DEFINITION
-local theme
-
 SETTINGS:open("read")
 local prefs = SETTINGS:read()
+local theme = prefs:match("THEME%[(.-)%]")
 SETTINGS:close()
-
-theme = prefs:match("THEME%[(.-)%]")
 
 local windowprops = {
     width = 1180,
@@ -94,25 +91,34 @@ local goButton = ui.Button(groupbox, "GO", (groupboxWidth - 100), 20, 40, 22)
 local returnButton = ui.Button(groupbox, "HOME", (groupboxWidth - 50), 20, 40, 22)
 local panel = ui.Panel(win, 10, 70, (windowprops.width - 20), (windowprops.height - 100))
 panel.border = true
-local welcome = ui.Label(panel, "Welcome to Naptua!", ((windowprops.width / 2) - 200), ((windowprops.height / 2) - 150))
-welcome.textalign = "center"
-welcome.fontsize = 30
-welcome.fontstyle = { ["italic"] = true, ["bold"] = false }
-welcome.fgcolor = 0x9BF4FF
-local welcome2 = ui.Label(panel,
-    "Use the top search bar to search! Note that this is an in-dev browser and not all WebX sites get indexed yet",
-    ((windowprops.width / 2) - 450), ((windowprops.height / 2) - 100))
-welcome2.textalign = "center"
-welcome2.fontsize = 15
-welcome2.fontstyle = { ["italic"] = true, ["bold"] = false }
-welcome2.fgcolor = 0x9BF4FF
+function RenderPage(p)
+    if p == "home" then
+        local welcome = ui.Label(panel, "Welcome to Naptua!", ((windowprops.width / 2) - 200),
+            ((windowprops.height / 2) - 150))
+        welcome.textalign = "center"
+        welcome.fontsize = 30
+        welcome.fontstyle = { ["italic"] = true, ["bold"] = false }
+        welcome.fgcolor = 0x9BF4FF
+        local welcome2 = ui.Label(panel,
+            "Use the top search bar to search! Note that this is an in-dev browser and not all WebX sites get indexed yet",
+            ((windowprops.width / 2) - 450), ((windowprops.height / 2) - 100))
+        welcome2.textalign = "center"
+        welcome2.fontsize = 15
+        welcome2.fontstyle = { ["italic"] = true, ["bold"] = false }
+        welcome2.fgcolor = 0x9BF4FF
+    elseif p == "settings" then
+        -- coming soon
+    end
+end
+
+RenderPage("home")
 
 -- TOPBAR MENU
 win.menu = ui.Menu()
 local Options = win.menu:insert(1, "Options", ui.Menu("Save page's content...", "Change theme", "About", "Quit"))
 local DevOptions = win.menu:insert(2, "Developer tools",
     ui.Menu("Open Naptua Logs", "Open WebX DNS Toolkit", "Open official WebX Documentation", "Open WXE (Coming soon...)",
-        "See raw files", "Inspect website"))
+        "See raw files", "Inspect website", "Open Nafart WebView Inspector"))
 function Options.submenu:onClick(item)
     if item.text == "Save page's content..." then
         if windowprops.isInHome == true then
@@ -165,7 +171,7 @@ function Options.submenu:onClick(item)
 THEME[light]
 DNS[webx]
 ]])
-            LOG("Changed to light theme")
+            LogToNaptuaLogs("Changed to light theme")
             SETTINGS:close()
         else
             ui.theme = "dark"
@@ -174,7 +180,7 @@ DNS[webx]
 THEME[dark]
 DNS[webx]
 ]])
-            LOG("Changed to dark theme")
+            LogToNaptuaLogs("Changed to dark theme")
             SETTINGS:close()
         end
     elseif item.text == "About" then
@@ -457,12 +463,12 @@ end
 
 -- WINDOW CREATION
 function win:onClose()
-    LOG("Naptua exited successfully")
+    LogToNaptuaLogs("Naptua exited successfully")
 end
 
 win:show()
 win:center()
-LOG("Naptua started successfully")
+LogToNaptuaLogs("Naptua started successfully")
 
 -- MAIN SEARCH FUNCTIONS
 -- SEARCH FUNCTION
@@ -480,7 +486,7 @@ function AccessRemote()
     end
 
     -- Función para procesar y escribir los datos en la caché
-    local function processAndCacheData(response, append)
+    local function processAndCacheData(response)
         if response.status == 200 then
             local parsed = json.decode(response.content)
             if parsed then
@@ -496,39 +502,39 @@ function AccessRemote()
                     data = encodedFiltered
                     CACHE:close()
                 else
-                    ERROR("Error encoding filtered data to JSON.")
+                    ErrorAndLog("Error encoding filtered data to JSON.")
                 end
             else
-                ERROR("Error parsing JSON from WebX DNS API.")
+                ErrorAndLog("Error parsing JSON from WebX DNS API.")
             end
         else
-            ERROR("Received HTTP Status Code " .. tostring(response.status) .. " from WebX DNS API.")
+            ErrorAndLog("Received HTTP Status Code " .. tostring(response.status) .. " from WebX DNS API.")
         end
     end
 
     -- [LEGACY SCRIPTS 2, 3]
 
     local function fetchPage(pageNumber)
-        net.Http("https://api.buss.lol"):get("/domains?page_size=5&page=" .. pageNumber).after = function(client,
-                                                                                                          response)
+        local target = "/domains?page_size=5&page=" .. pageNumber
+        net.Http("https://api.buss.lol"):get(target).after = function(client, response)
             processAndCacheData(response)
         end
     end
 
     local pageone = fetchPage(1)
     if pageone then
-        LOG(pageone)
+        LogToNaptuaLogs(pageone)
     else
-        ERROR("Failed to fetch data")
+        ErrorAndLog("Failed to fetch data")
     end
-    LOG(pageone)
+    LogToNaptuaLogs(pageone)
     local pagetwo = fetchPage(2)
     if pageone and pagetwo then
         for _, entry in ipairs(pagetwo.domains) do
             table.insert(pageone.domains, entry)
         end
     end
-    -- LOG(json.encode(pageone))
+    -- LogToNaptuaLogs(json.encode(pageone))
 
     return data
 end
@@ -592,6 +598,8 @@ function Return()
     end
 
     searchBar.text = ""
+
+    RenderPage("home")
 end
 
 -- GO TO URL FUNCTION
@@ -606,45 +614,45 @@ function GoToUrl(i, ip)
 
     if string.match(ip, "github") then
         local user = string.match(ip, "github%.com/([%w%-%_]+)/")
-        LOG(user)
+        LogToNaptuaLogs(user)
         local repo = string.match(ip, "github%.com/[%w%-%_]+/([%w%-%_]+)")
-        LOG(repo)
+        LogToNaptuaLogs(repo)
         local baseuri = "https://raw.githubusercontent.com/"
         local acoplateduri = user .. "/" .. repo .. "/main"
         local uri = "https://raw.githubusercontent.com/" .. user .. "/" .. repo .. "/main" .. "/index.html"
-        LOG(uri)
+        LogToNaptuaLogs(uri)
         local htmlclient, htmlresponse = await(net.Http(baseuri):download(acoplateduri .. "/index.html"))
         if htmlresponse then
-            LOG("FETCHED " .. htmlresponse.file.name .. " FROM " .. baseuri .. acoplateduri)
+            LogToNaptuaLogs("FETCHED " .. htmlresponse.file.name .. " FROM " .. baseuri .. acoplateduri)
         end
 
         local cssfilename
         local cssclient, cssresponse = await(net.Http(baseuri):download(acoplateduri .. "/style.css"))
         if cssresponse.file then
-            LOG("FETCHED " .. cssresponse.file.name .. " FROM " .. baseuri .. acoplateduri)
+            LogToNaptuaLogs("FETCHED " .. cssresponse.file.name .. " FROM " .. baseuri .. acoplateduri)
             cssfilename = "style.css"
         else
             local cssclientsec, cssresponsesec = await(net.Http(baseuri):download(acoplateduri .. "/styles.css"))
             if cssresponsesec.file then
-                LOG("FETCHED " .. cssresponsesec.file.name .. " FROM " .. baseuri .. acoplateduri)
+                LogToNaptuaLogs("FETCHED " .. cssresponsesec.file.name .. " FROM " .. baseuri .. acoplateduri)
                 cssfilename = "styles.css"
             else
-                ERROR("No CSS 3.25 found! Tried to fetch 'style.css', 'styles.css'. Fallback to built-in styles.")
+                ErrorAndLog("No CSS 3.25 found! Tried to fetch 'style.css', 'styles.css'. Fallback to built-in styles.")
             end
         end
 
         local luafilename
         local luaclient, luaresponse = await(net.Http(baseuri):download(acoplateduri .. "/script.lua"))
         if luaresponse.file then
-            LOG("FETCHED " .. luaresponse.file.name .. " FROM " .. baseuri .. acoplateduri)
+            LogToNaptuaLogs("FETCHED " .. luaresponse.file.name .. " FROM " .. baseuri .. acoplateduri)
             luafilename = "script.lua"
         else
             local luaclientsec, luaresponsesec = await(net.Http(baseuri):download(acoplateduri .. "/main.lua"))
             if luaresponsesec.file then
-                LOG("FETCHED " .. luaresponsesec.file.name .. " FROM " .. baseuri .. acoplateduri)
+                LogToNaptuaLogs("FETCHED " .. luaresponsesec.file.name .. " FROM " .. baseuri .. acoplateduri)
                 luafilename = "main.lua"
             else
-                ERROR("No Luau found! Tried to fetch 'script.lua', 'main.lua'. No script will be loaded.")
+                ErrorAndLog("No Luau found! Tried to fetch 'script.lua', 'main.lua'. No script will be loaded.")
             end
         end
 
@@ -654,7 +662,7 @@ function GoToUrl(i, ip)
             HTMLFILE:open("read")
             htmlpp = HTMLFILE:read()
         else
-            ERROR("This page does not have an index!")
+            ErrorAndLog("This page does not have an index!")
             Return()
         end
         if cssfilename then
@@ -680,7 +688,7 @@ function GoToUrl(i, ip)
             PerformNartRendering(htmlpp, nil, nil)
         end
     else
-        ERROR("Non-GitHub HTTP hosts are not supported yet. Could not access remote.")
+        ErrorAndLog("Non-GitHub HTTP hosts are not supported yet. Could not access remote.")
     end
 end
 
@@ -724,15 +732,15 @@ function Search(input)
             if not CACHE or CACHE:open():read() == "" then
                 local msg =
                 "Warning: Domains cache not found. If this is the first time you run Naptua, try again and it should work."
-                ERROR(msg)
+                ErrorAndLog(msg)
             else
                 local msg = "Error: Domains not found (or could not json.decode them)"
-                ERROR(msg)
+                ErrorAndLog(msg)
             end
         end
     else
         local msg = "Error: No data found in cache or response"
-        ERROR(msg)
+        ErrorAndLog(msg)
     end
 end
 
