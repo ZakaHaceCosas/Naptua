@@ -27,6 +27,7 @@ A WebX browser made for Windows with exclusive developer tools such as built-in 
 | ... | (for now) requires self compiling (downloading the framework) |
 
 As said, **it is not finished**, so don't expect it to work properly and don't get surpirsed by it having more cons than pros. It's a two day project and a messy code. Later I'll take my time to clean it.
+**Don't expect _active_ development either.** I'll occasionally look at it, but won't give it daily work or anything close.
 
 ### FEATURES:
 
